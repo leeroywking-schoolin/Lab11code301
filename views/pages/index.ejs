@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="./styles/icons.css">
     <link rel="stylesheet" href="./styles/layout.css">
     <link rel="stylesheet" href="./styles/modules.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   </head>
   <body>
+    <nav>
+      <h1>GreyKing Books</h1>
+      <i id="menuIcon" class="fas fa-ellipsis-h"></i>
+    </nav>
     <main>
+      <div class="searchFormDiv">
       <h4>Search by Title or Author</h4>
       <form action="/searches" method="post">
         <input type="text" name="search" placeholder="Enter a title or author" required>
@@ -27,6 +33,7 @@
         </fieldset>
         <button type="submit">Search the Google Books API</button>
       </form>
+      </div>
     </main>
   </body>
 </html>

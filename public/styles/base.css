@@ -1,7 +1,60 @@
 html{
-    background: lightblue;
+    background: black;
+    margin: 0 auto;
+    width: 560px;
+    box-sizing: border-box;
+    color: white;
 }
-div{
-    width: 250px;
-    float: left;
+
+nav {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+#menuIcon:hover {
+    background-color: yellow;
+}
+
+h4 {
+    background: #333;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.searchFormDiv {
+    background: #666;
+    width: 560px;
+    height: 700px;
+}
+
+form {
+    margin: 0 auto;
+    width: 480px;
+    margin-bottom: 15px;
+    color: black;
+}
+
+input {
+    margin: 0 auto;
+    width: 450px;
+    padding: 20px 10px;
+    margin-bottom: 15px;
+}
+
+fieldset {
+    background: lightgray;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: left;
+}
+
+button {
+    background: black;
+    color: white;
+    width: 480px;
+    height: 60px;
 }
