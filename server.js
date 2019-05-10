@@ -54,7 +54,6 @@ function createSearch(request, response) {
   }
 
   console.log(url);
-  response.send('OK');
   superagent.get(url)
     .then(apiResponse =>
       apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
