@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Book Results</title>
+    <link rel="stylesheet" href="./styles/reset.css">
+    <link rel="stylesheet" href="./styles/base.css">
+    <link rel="stylesheet" href="./styles/icons.css">
+    <link rel="stylesheet" href="./styles/layout.css">
+    <link rel="stylesheet" href="./styles/modules.css">
+  </head>
+  <body>
+    <main>
+      <h4>Search Results</h4>
+
+      <ul>
+        <% results.forEach(book => { %>
+          <li> <%= book %> </li>
+        <% }); %>
+
+        
+      </ul>
+
+
+
+    </main>
+  </body>
+</html>
+
