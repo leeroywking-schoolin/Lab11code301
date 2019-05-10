@@ -3,6 +3,7 @@
 // dependancies
 const express = require('express');
 const superagent = require('superagent');
+require('dotenv').config();
 
 // App setup
 const app = express();
@@ -25,14 +26,13 @@ app.post('/searches', createSearch);
 // catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
+app.get('/test', (request, response) => response.status(404).send('this works jabroni'));
+
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
 // Helper Functions
 // Only show part of this to get students started
-function Book(info) {
-    const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
-    this.title = info.title || 'No title available';
-};
+
 
 // note that .ejs file extension is not required
 function newSearch(request, response) {
@@ -58,9 +58,14 @@ function createSearch(request, response){
 
     superagent.get(url)
     .then(apiResponse =>
-        apiResponse.body.items.map(
-            bookResult => new Book(bookResult.volumeInfo)))
-    .then(result => 
+        apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
+    .then(results => 
         response.render('pages/searches/show', { searchResults: results }));
-    
 }
+
+function Book(banana){
+    this.title = banana.title;
+    this.authorsArray = banana.authors;
+    this.description = banana.description;
+    this.imageURL = banana.imageLinks.thumbnail;
+};
