@@ -76,5 +76,5 @@ function Book(banana) {
 
 const errorHandler = (err, response) => {
   console.log(err);
-  if (response) response.status(500).send('Sorry muchacho, try again later');
+  if (response) response.status(500).render('pages/error');
 }
