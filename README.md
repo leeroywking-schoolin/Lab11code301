@@ -10,7 +10,16 @@ This application is for searching books and authors using a search form. The res
 Going to the URL and typing an author or title, indicating with a radio button which option they are entering and then hitting search.
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+EJS
+Express
+dotenv(for local use)
+no demon
+javascript
+html
+css
+visual studio code
+macbook pro
+macbook air
 
 ## Change Log
 Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
@@ -25,5 +34,5 @@ Adriana Graybill
 Number and name of feature: Lab 11
 Estimate of time needed to complete: 6 hours
 Start time: 6:30pm 5/8/19
-Finish time: 
-Actual time needed to complete: 
+Finish time: 9:30pm 5/9/19
+Actual time needed to complete: 6 hours
