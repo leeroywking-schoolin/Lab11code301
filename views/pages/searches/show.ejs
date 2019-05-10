@@ -1,26 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Book Results</title>
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/base.css">
-    <link rel="stylesheet" href="./styles/icons.css">
-    <link rel="stylesheet" href="./styles/layout.css">
-    <link rel="stylesheet" href="./styles/modules.css">
-  </head>
-  <body>
-    <main>
-      <h4>Search Results</h4>
 
-        <% searchResults.forEach(book => { %>
-        <div>
-          <li><img src="<%= book.imageURL %>"></li>
-          <li><%= book.title %> </li>
-          <li><%= book.authorsArray %> </li>
-          <li><%= book.description %> </li>
-        </div>
-        <% }); %>
-    </main>
-  </body>
+<head>
+  <title>Book Results</title>
+  <link rel="stylesheet" href="./styles/reset.css">
+  <link rel="stylesheet" href="./styles/base.css">
+  <link rel="stylesheet" href="./styles/icons.css">
+  <link rel="stylesheet" href="./styles/layout.css">
+  <link rel="stylesheet" href="./styles/modules.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav>
+    <h1>GreyKing Books</h1>
+    <i id="menuIcon" class="fas fa-ellipsis-h"></i>
+  </nav>
+  <main>
+    <h4 id="searchResults">Search Results</h4>
+
+    <% searchResults.forEach(book => { %>
+      <div class="booksDiv">
+        <p><img src="<%= book.imageURL %>"></p>
+        <p>
+          <%= book.title %>
+        </p>
+        <p>
+          <%= book.authorsArray %>
+        </p>
+        <p class="description">
+          <%= book.description %>
+        </p>
+      </div>
+      <% }); %>
+  </main>
+</body>
+
 </html>
-

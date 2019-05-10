@@ -6,6 +6,10 @@ html{
     color: white;
 }
 
+body {
+    background: #666;
+}
+
 nav {
     color: white;
     display: flex;
@@ -25,10 +29,39 @@ h4 {
     margin-bottom: 15px;
 }
 
+#searchResults {
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
 .searchFormDiv {
     background: #666;
     width: 560px;
     height: 700px;
+}
+
+.booksDiv {
+    width: 480px;
+    box-sizing: border-box;
+    background: lightgray;
+    color: black;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.booksDiv img {
+    object-fit: contain;
+    width: 200px;
+}
+
+p {
+    padding: 10px;
+}
+
+.description {
+    height: 200px;
+    overflow: scroll;
 }
 
 form {
