@@ -26,7 +26,7 @@ app.post('/searches', createSearch);
 // catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
-app.get('/test', (request, response) => response.status(404).send('this works jabroni'));
+app.get('/test', (request, response) => response.status(200).send('this works jabroni'));
 
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
@@ -55,17 +55,27 @@ function createSearch(request, response){
 
     console.log(url);
     response.send('OK');
-
     superagent.get(url)
     .then(apiResponse =>
         apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(results => 
-        response.render('pages/searches/show', { searchResults: results }));
+        response.render('pages/searches/show', { searchResults: results }))
+    .catch(err => errorHandler(err,response))
 }
 
 function Book(banana){
-    this.title = banana.title;
-    this.authorsArray = banana.authors;
-    this.description = banana.description;
-    this.imageURL = banana.imageLinks.thumbnail;
+    this.title = banana.title || 'No title available';
+    this.authorsArray = banana.authors || 'Author Unknown';
+    this.description = banana.description || 'Description unavailable';
+    this.imageURL = banana.imageLinks.thumbnail || 'Image unavailable';
+    const urlFixer = (url) => {
+        if(url.match(/https/)){return url}
+        else{return url.replace(/http/, 'https')}
+      }
+    this.imageURL = urlFixer(this.imageURL);
 };
+
+const errorHandler = (err,response) => {
+    console.log(err);
+    if(response) response.status(500).send('Sorry muchacho, try again later');
+}
