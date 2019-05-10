@@ -1,3 +1,7 @@
 html{
     background: lightblue;
 }
+div{
+    width: 250px;
+    float: left;
+}
