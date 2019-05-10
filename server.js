@@ -72,7 +72,7 @@ function Book(banana) {
     else { return url.replace(/http/, 'https') }
   }
   this.imageURL = urlFixer(this.imageURL);
-};
+}
 
 const errorHandler = (err, response) => {
   console.log(err);
