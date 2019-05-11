@@ -12,20 +12,7 @@
   <main>
     <h4 id="searchResults">Search Results</h4>
 
-    <% searchResults.forEach(book => { %>
-      <div class="booksDiv">
-        <p><img src="<%= book.imageURL %>"></p>
-        <p>
-          <%= book.title %>
-        </p>
-        <p>
-          <%= book.authorsArray %>
-        </p>
-        <p class="description">
-          <%= book.description %>
-        </p>
-      </div>
-      <% }); %>
+    <%- include('../../partials/results') %>
   </main>
 </body>
 

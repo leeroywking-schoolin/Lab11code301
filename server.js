@@ -31,6 +31,7 @@ app.get('/new', newSearch);
 // creases a new search to the google books api
 app.post('/searches', createSearch);
 
+app.get('/searches/:search_id', getOneBook);
 // catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
@@ -65,20 +66,21 @@ function createSearch(request, response) {
     .then(apiResponse =>
       apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(results =>
-      response.render('pages/searches/show', { searchResults: results }))
+      response.render('pages/searches/show', { booksArray: results }))
     .catch(err => errorHandler(err, response))
 }
 
 function Book(banana) {
   this.title = banana.title || 'No title available';
-  this.authorsArray = banana.authors || 'Author Unknown';
+  this.author = banana.authors || 'Author Unknown';
   this.description = banana.description || 'Description unavailable';
-  this.imageURL = banana.imageLinks.thumbnail || 'Image unavailable';
+  this.image_url = banana.imageLinks.thumbnail || 'Image unavailable';
   const urlFixer = (url) => {
     if (url.match(/https/)) { return url }
     else { return url.replace(/http/, 'https') }
   }
-  this.imageURL = urlFixer(this.imageURL);
+  this.image_url = urlFixer(this.image_url);
+  this.isbn = banana.industryIdentifiers[0].identifier || 'ISBN unavailable';
 }
 
 const errorHandler = (err, response) => {
@@ -93,7 +95,14 @@ function getBooksFromDb(request, response) {
     .then(results => {
       console.log('results.rows' , results.rows);
       // this needs to make a JS object
-      response.render('pages/index', { dbResults: results.rows });
+      response.render('pages/index', { booksArray: results.rows });
     }); }
   catch (err) { errorHandler(err); }
+}
+
+function getOneBook(request, response) {
+  console.log('request parameter' , request.params.search_id);
+  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${request.params.search_id}`;
+  app.get(url)
+    .then()
 }
