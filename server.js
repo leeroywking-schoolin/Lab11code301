@@ -3,6 +3,7 @@
 // dependancies
 const express = require('express');
 const superagent = require('superagent');
+const pg = require('pg');
 require('dotenv').config();
 
 // App setup
@@ -13,11 +14,16 @@ const PORT = process.env.PORT;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+const client = new pg.Client(process.env.DATABASE_URL);
+
+client.connect();
+client.on('error', err => console.log(err));
+
 // set view engine
 app.set('view engine', 'ejs');
 
 
-app.get('/', indexEjs);
+app.get('/', getBooksFromDb);
 // api routes
 // renders the search form
 app.get('/new', newSearch);
@@ -34,10 +40,6 @@ app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
 // Helper Functions
 // Only show part of this to get students started
-
-function indexEjs(request, response) {
-  response.render('pages/index');
-}
 
 // note that .ejs file extension is not required
 function newSearch(request, response) {
@@ -82,4 +84,16 @@ function Book(banana) {
 const errorHandler = (err, response) => {
   console.log(err);
   if (response) response.status(500).render('pages/error');
+}
+
+function getBooksFromDb(request, response) {
+  let sql = `SELECT * FROM BOOKS`;
+
+  try { return client.query(sql)
+    .then(results => {
+      console.log('results.rows' , results.rows);
+      // this needs to make a JS object
+      response.render('pages/index', { dbResults: results.rows });
+    }); }
+  catch (err) { errorHandler(err); }
 }
