@@ -31,7 +31,7 @@ app.get('/new', newSearch);
 // creases a new search to the google books api
 app.post('/searches', createSearch);
 
-app.get('/searches/:search_id', getOneBook);
+app.get('/searches/:save_id', saveOneBook);
 // catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
@@ -88,6 +88,20 @@ const errorHandler = (err, response) => {
   if (response) response.status(500).render('pages/error');
 }
 
+function saveBookToDb(sqlInfo) {
+  let params = [];
+
+  for (let i = 1; i <= sqlInfo.values.length; i++) {
+    params.push(`$${i}`);
+  }
+  let sqlParams = params.join();
+
+  let sql = `INSERT INTO books (${sqlInfo.columns} VALUES ${sqlParams});`
+
+  try {return client.query(sql, sqlInfo.values);}
+  catch (err) {errorHandler(err);}
+}
+
 function getBooksFromDb(request, response) {
   let sql = `SELECT * FROM BOOKS`;
 
@@ -97,12 +111,24 @@ function getBooksFromDb(request, response) {
       // this needs to make a JS object
       response.render('pages/index', { booksArray: results.rows });
     }); }
-  catch (err) { errorHandler(err); }
+  catch (err) {errorHandler(err);}
 }
 
-function getOneBook(request, response) {
-  console.log('request parameter' , request.params.search_id);
-  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${request.params.search_id}`;
+// function getOneBook(request, response) {
+
+// }
+
+function saveOneBook(request) {
+  let isbn = request.params.save_id;
+  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${isbn}`;
+  console.log(url);
   app.get(url)
-    .then()
+    .then(isbnResult => {
+      let saveBook = new Book(isbnResult.body.items[0]);
+      let sqlInfo = {};
+      sqlInfo.columns = Object.keys(saveBook).join();
+      sqlInfo.values = Object.values(saveBook);
+
+      saveBookToDb(sqlInfo);
+    })
 }
