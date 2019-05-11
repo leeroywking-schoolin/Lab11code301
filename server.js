@@ -16,9 +16,11 @@ app.use(express.static('public'));
 // set view engine
 app.set('view engine', 'ejs');
 
+
+app.get('/', indexEjs);
 // api routes
 // renders the search form
-app.get('/', newSearch);
+app.get('/new', newSearch);
 
 // creases a new search to the google books api
 app.post('/searches', createSearch);
@@ -33,10 +35,13 @@ app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 // Helper Functions
 // Only show part of this to get students started
 
+function indexEjs(request, response) {
+  response.render('pages/index');
+}
 
 // note that .ejs file extension is not required
 function newSearch(request, response) {
-  response.render('pages/index');
+  response.render('pages/new');
 }
 
 // No API key required
