@@ -32,6 +32,8 @@ app.get('/new', newSearch);
 app.post('/searches', createSearch);
 
 app.get('/searches/:save_id', saveOneBook);
+
+app.get('/details/:detail_id', viewDetails);
 // catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
@@ -96,7 +98,7 @@ function saveBookToDb(sqlInfo) {
   }
   let sqlParams = params.join();
 
-  let sql = `INSERT INTO books (${sqlInfo.columns} VALUES ${sqlParams});`
+  let sql = `INSERT INTO books (${sqlInfo.columns}) VALUES (${sqlParams});`
 
   try {return client.query(sql, sqlInfo.values);}
   catch (err) {errorHandler(err);}
@@ -118,17 +120,31 @@ function getBooksFromDb(request, response) {
 
 // }
 
-function saveOneBook(request) {
+function saveOneBook(request, response) {
   let isbn = request.params.save_id;
   let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${isbn}`;
   console.log(url);
-  app.get(url)
+  superagent.get(url)
     .then(isbnResult => {
-      let saveBook = new Book(isbnResult.body.items[0]);
+      let saveBook = new Book(isbnResult.body.items[0].volumeInfo);
       let sqlInfo = {};
       sqlInfo.columns = Object.keys(saveBook).join();
       sqlInfo.values = Object.values(saveBook);
 
-      saveBookToDb(sqlInfo);
+      console.log(sqlInfo.columns);
+      console.log(sqlInfo.values);
+
+      saveBookToDb(sqlInfo)
+        .then(response.redirect('/'));
     })
+}
+
+function viewDetails(request, response) {
+  let isbn = request.params.detail_id;
+  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${isbn}`;
+  superagent.get(url)
+    .then(isbnResult => {
+      let bookDetail = new Book(isbnResult.body.items[0].volumeInfo);
+      response.render('pages/detail', { booksArray: [bookDetail] });
+    });
 }
