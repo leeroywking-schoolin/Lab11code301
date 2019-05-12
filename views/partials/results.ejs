@@ -1,0 +1,19 @@
+<% booksArray.forEach(book => { %>
+  <div class="booksDiv">
+    <p><img src="<%= book.image_url %>"></p>
+    <p>
+      <%= book.title %>
+    </p>
+    <p>
+      <%= book.author %>
+    </p>
+    <p class="description">
+      <%= book.description %>
+    </p>
+    <p class="isbn">
+      <%= book.isbn %>
+    </p>
+    <a href="/searches/<%= book.isbn %>">Save book to bookshelf</a>
+    <a href="/details/<%= book.isbn %>">View details</a>
+  </div>
+  <% }); %>
