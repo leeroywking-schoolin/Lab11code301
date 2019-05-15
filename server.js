@@ -22,7 +22,6 @@ client.on('error', err => console.log(err));
 // set view engine
 app.set('view engine', 'ejs');
 
-
 app.get('/', getBooksFromDb);
 // api routes
 // renders the search form
@@ -31,7 +30,7 @@ app.get('/new', newSearch);
 // creases a new search to the google books api
 app.post('/searches', createSearch);
 
-app.get('/searches/:save_id', saveOneBook);
+app.post('/searches/save_id', saveOneBook);
 
 app.get('/details/:detail_id', viewDetails);
 // catch-all
@@ -82,7 +81,7 @@ function Book(banana) {
     else { return url.replace(/http/, 'https') }
   }
   this.image_url = urlFixer(this.image_url);
-  this.isbn = banana.industryIdentifiers[0].identifier || 'ISBN unavailable';
+  this.isbn = banana.industryIdentifiers[0].identifier.replace(/[^\d]/g, '') || 'ISBN unavailable';
 }
 
 const errorHandler = (err, response) => {
@@ -100,20 +99,22 @@ function saveBookToDb(sqlInfo) {
 
   let sql = `INSERT INTO books (${sqlInfo.columns}) VALUES (${sqlParams});`
 
-  try {return client.query(sql, sqlInfo.values);}
-  catch (err) {errorHandler(err);}
+  try { return client.query(sql, sqlInfo.values); }
+  catch (err) { errorHandler(err); }
 }
 
 function getBooksFromDb(request, response) {
   let sql = `SELECT * FROM BOOKS`;
 
-  try { return client.query(sql)
-    .then(results => {
-      console.log('results.rows' , results.rows);
-      // this needs to make a JS object
-      response.render('pages/index', { booksArray: results.rows });
-    }); }
-  catch (err) {errorHandler(err);}
+  try {
+    return client.query(sql)
+      .then(results => {
+        console.log('results.rows', results.rows);
+        // this needs to make a JS object
+        response.render('pages/index', { booksArray: results.rows });
+      });
+  }
+  catch (err) { errorHandler(err); }
 }
 
 // function getOneBook(request, response) {
@@ -121,22 +122,29 @@ function getBooksFromDb(request, response) {
 // }
 
 function saveOneBook(request, response) {
-  let isbn = request.params.save_id;
-  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${isbn}`;
-  console.log(url);
-  superagent.get(url)
-    .then(isbnResult => {
-      let saveBook = new Book(isbnResult.body.items[0].volumeInfo);
-      let sqlInfo = {};
-      sqlInfo.columns = Object.keys(saveBook).join();
-      sqlInfo.values = Object.values(saveBook);
+  console.log(request.body.saveBook);
 
-      console.log(sqlInfo.columns);
-      console.log(sqlInfo.values);
+  let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
+  let SQL = 'INSERT INTO books_app(title, author, description, image_url, isbn, bookshelf) VALUES($1,$2,$3,$4,$5,$6);';
+  let values = [title, author, description, image_url, isbn, bookshelf];
 
-      saveBookToDb(sqlInfo)
-        .then(response.redirect('/'));
-    })
+  return client.query(SQL, values)
+    .then(response.redirect('/'))
+    .then(err => errorHandler(err));
+
+  // .then(isbnResult => {
+  //   let saveBook = new Book(isbnResult.body.items[0].volumeInfo);
+  //   let sqlInfo = {};
+  //   sqlInfo.columns = Object.keys(saveBook).join();
+  //   sqlInfo.values = Object.values(saveBook);
+
+  //   console.log(sqlInfo.columns);
+  //   console.log(sqlInfo.values);
+
+  //   saveBookToDb(sqlInfo)
+  //     .then(response.redirect('/'));
+  // })
+  response.send('hi, you suck, its not fine, Lee..');
 }
 
 function viewDetails(request, response) {
