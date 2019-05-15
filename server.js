@@ -22,7 +22,6 @@ client.on('error', err => console.log(err));
 // set view engine
 app.set('view engine', 'ejs');
 
-
 app.get('/', getBooksFromDb);
 // api routes
 // renders the search form
@@ -82,7 +81,7 @@ function Book(banana) {
     else { return url.replace(/http/, 'https') }
   }
   this.image_url = urlFixer(this.image_url);
-  this.isbn = banana.industryIdentifiers[0].identifier || 'ISBN unavailable';
+  this.isbn = banana.industryIdentifiers[0].identifier.replace(/[^\d]/g,'') || 'ISBN unavailable';
 }
 
 const errorHandler = (err, response) => {
