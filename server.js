@@ -124,8 +124,15 @@ function getBooksFromDb(request, response) {
 function saveOneBook(request, response) {
   console.log(request.body.saveBook);
 
-  let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
-  let SQL = 'INSERT INTO books_app(title, author, description, image_url, isbn, bookshelf) VALUES($1,$2,$3,$4,$5,$6);';
+  // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
+  let title = request.body.saveBook[0]
+  let author = request.body.saveBook[1]
+  let description =request.body.saveBook[2].slice(0,750)
+  let image_url = request.body.saveBook[3]
+  let isbn = request.body.saveBook[4]
+  let bookshelf = request.body.saveBook[5]
+
+  let SQL = 'INSERT INTO books(title, author, description, image_url, isbn, bookshelf) VALUES($1,$2,$3,$4,$5,$6);';
   let values = [title, author, description, image_url, isbn, bookshelf];
 
   return client.query(SQL, values)
