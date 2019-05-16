@@ -30,7 +30,9 @@ app.get('/new', newSearch);
 // creases a new search to the google books api
 app.post('/searches', createSearch);
 
-app.post('/searches/save_id', saveOneBook);
+app.post('/searches/save_id', saveBook);
+app.put('/searches/save_id', updateBook);
+
 
 app.get('/details/:detail_id', viewDetails);
 // catch-all
@@ -51,7 +53,7 @@ function newSearch(request, response) {
 // No API key required
 // console.log request.body and request.body.search
 function createSearch(request, response) {
-  console.log(request.body)
+  // console.log(request.body)
 
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
@@ -89,27 +91,13 @@ const errorHandler = (err, response) => {
   if (response) response.status(500).render('pages/error');
 }
 
-function saveBookToDb(sqlInfo) {
-  let params = [];
-
-  for (let i = 1; i <= sqlInfo.values.length; i++) {
-    params.push(`$${i}`);
-  }
-  let sqlParams = params.join();
-
-  let sql = `INSERT INTO books (${sqlInfo.columns}) VALUES (${sqlParams});`
-
-  try { return client.query(sql, sqlInfo.values); }
-  catch (err) { errorHandler(err); }
-}
-
 function getBooksFromDb(request, response) {
   let sql = `SELECT * FROM BOOKS`;
 
   try {
     return client.query(sql)
       .then(results => {
-        console.log('results.rows', results.rows);
+        // console.log('results.rows', results.rows);
         // this needs to make a JS object
         response.render('pages/index', { booksArray: results.rows });
       });
@@ -121,8 +109,9 @@ function getBooksFromDb(request, response) {
 
 // }
 
-function saveOneBook(request, response) {
-  console.log(request.body.saveBook);
+function saveBook(request, response) {
+  console.log('congrats you hit the save book function');
+  // console.log(request.body.saveBook);
 
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
@@ -136,30 +125,39 @@ function saveOneBook(request, response) {
   let values = [title, author, description, image_url, isbn, bookshelf];
 
   return client.query(SQL, values)
+    .then(response.redirect(`/details/${isbn}`),)
+    .then(err => errorHandler(err));
+}
+
+function updateBook(request, response) {
+
+
+  // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
+  let title = request.body.saveBook[0]
+  let author = request.body.saveBook[1]
+  let description =request.body.saveBook[2].slice(0,750)
+  let image_url = request.body.saveBook[3]
+  let isbn = request.body.saveBook[4]
+  let bookshelf = request.body.saveBook[5]
+
+  let SQL = 'UPDATE books SET title=$1, author=$2 ,description=$3 , bookshelf=$5 WHERE isbn=$4';
+  let values = [title, author, description, isbn, bookshelf];
+
+  return client.query(SQL, values)
     .then(response.redirect('/'))
     .then(err => errorHandler(err));
-
-  // .then(isbnResult => {
-  //   let saveBook = new Book(isbnResult.body.items[0].volumeInfo);
-  //   let sqlInfo = {};
-  //   sqlInfo.columns = Object.keys(saveBook).join();
-  //   sqlInfo.values = Object.values(saveBook);
-
-  //   console.log(sqlInfo.columns);
-  //   console.log(sqlInfo.values);
-
-  //   saveBookToDb(sqlInfo)
-  //     .then(response.redirect('/'));
-  // })
-  response.send('hi, you suck, its not fine, Lee..');
 }
 
 function viewDetails(request, response) {
+  console.log(' congrats you made it to the view details endpoint')
   let isbn = request.params.detail_id;
-  let url = `https://www.googleapis.com/books/v1/volumes?q=+isbn${isbn}`;
-  superagent.get(url)
-    .then(isbnResult => {
-      let bookDetail = new Book(isbnResult.body.items[0].volumeInfo);
-      response.render('pages/detail', { booksArray: [bookDetail] });
-    });
+  let VALUES = [isbn];
+  let SQL = `SELECT * FROM BOOKS where isbn=$1`;
+  return client.query(SQL, VALUES)
+      .then(results => {
+        console.log('results.rows', results.rows);
+        // this needs to make a JS object
+        response.render('pages/detail', { booksArray: results.rows });
+      })
+  .catch(err => errorHandler(err))
 }
