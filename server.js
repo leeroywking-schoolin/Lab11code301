@@ -130,7 +130,6 @@ function saveBook(request, response) {
 }
 
 function updateBook(request, response) {
-  console.log(request.body.saveBook)
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
   let author = request.body.saveBook[1]
@@ -148,6 +147,7 @@ function updateBook(request, response) {
 
 function deletebook(request, response) {
   let isbn = request.body.deleteBook
+  console.log(isbn)
   let SQL = 'DELETE FROM books WHERE isbn=$1'
   let values = [isbn];
   return client.query(SQL, values)
