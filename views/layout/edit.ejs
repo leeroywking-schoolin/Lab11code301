@@ -1,4 +1,4 @@
-<% booksArray.forEach(book => { %>
+<% booksResponse.booksArray.forEach(book => { %>
     <form action="/searches/save_idput" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
       <img src="<%= book.image_url %>">
       <input type="text" name="saveBook" value="<%= book.title %>" required>
@@ -8,8 +8,11 @@
       <input type="text" name="saveBook" value="<%= book.isbn %>" required>
       <input type="text" name="saveBook" value="" placeholder="bookshelf" required>
       <button type="submit">Update in bookshelf</button>
+      <select name="bookshelf">
+            <% booksResponse.bookshelfArray.forEach(bookshelf  => { %>
+                <option><%= bookshelf %></option>    
+            <%  });%>        
+          </select>
     </form>
-    <form action="/searches/delete" method="post" _method="delete">
-    <button type="submit" name="deleteBook" value="<%= book.isbn %>"> DELETE BOOK </button>
-    </form>
+    <form action="/searches/delete" method="post" _method="delete"></form>
     <% }); %>

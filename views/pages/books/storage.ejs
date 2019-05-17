@@ -9,7 +9,7 @@
   <nav>
     <%- include('../../layout/navbar') %>
   </nav>
-<%= booksResponse.bookshelfArray %>
+<%= booksResponse %>
 <% booksResponse.booksArray.forEach(book => { %>
   <div class="booksDiv">
     <p><img src="<%= book.image_url %>"></p>
