@@ -57,9 +57,7 @@ function newSearch(request, response) {
 }
 
 // No API key required
-// console.log request.body and request.body.search
 function createSearch(request, response) {
-  // console.log(request.body)
 
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
@@ -70,7 +68,6 @@ function createSearch(request, response) {
     url += `+inauthor:${request.body.search[0]}`;
   }
 
-  console.log(url);
   superagent.get(url)
     .then(apiResponse =>
       apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
@@ -103,7 +100,6 @@ function getBooksFromDb(request, response) {
   try {
     return client.query(sql)
       .then(results => {
-        // console.log('results.rows', results.rows);
         // this needs to make a JS object
         response.render('pages/index', { booksArray: results.rows });
       });
@@ -116,8 +112,6 @@ function getBooksFromDb(request, response) {
 // }
 
 function saveBook(request, response) {
-  console.log('congrats you hit the save book function');
-  // console.log(request.body.saveBook);
 
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
@@ -136,7 +130,7 @@ function saveBook(request, response) {
 }
 
 function updateBook(request, response) {
-  console.log('UPDATING THE BOOK')
+  console.log(request.body.saveBook)
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
   let author = request.body.saveBook[1]
@@ -144,16 +138,15 @@ function updateBook(request, response) {
   let image_url = request.body.saveBook[3]
   let isbn = request.body.saveBook[4]
   let bookshelf = request.body.saveBook[5]
+  let bookshelfDropDown = request.body.saveBook[6];
   let SQL = 'UPDATE books SET title=$1, author=$2 ,description=$3 , bookshelf=$5 WHERE isbn=$4';
-  let values = [title, author, description, isbn, bookshelf];
+  let values = [title, author, description, isbn, bookshelfDropDown];
   return client.query(SQL, values)
     .then(response.redirect('/'))
     .then(err => errorHandler(err));
 }
 
 function deletebook(request, response) {
-  console.log(request.body.deleteBook)
-  console.log('Deleting the book');
   let isbn = request.body.deleteBook
   let SQL = 'DELETE FROM books WHERE isbn=$1'
   let values = [isbn];
@@ -163,7 +156,6 @@ function deletebook(request, response) {
 }
 
 function viewDetails(request, response) {
-  console.log(' congrats you made it to the view details endpoint')
   let isbn = request.params.detail_id;
   let VALUES = [isbn];
   let SQL = `SELECT * FROM BOOKS where isbn=$1`;

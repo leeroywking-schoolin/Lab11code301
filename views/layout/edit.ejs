@@ -6,13 +6,13 @@
       <input type="text" name="saveBook" value="<%= book.description %>" required >
       <input type="hidden" name="saveBook" value="<%= book.image_url %>" required>
       <input type="text" name="saveBook" value="<%= book.isbn %>" required>
-      <input type="text" name="saveBook" value="" placeholder="bookshelf" required>
-      <button type="submit">Update in bookshelf</button>
-      <select name="bookshelf">
-            <% booksResponse.bookshelfArray.forEach(bookshelf  => { %>
-                <option><%= bookshelf %></option>    
+      <input type="hidden" name="saveBook" value="" placeholder="bookshelf" required>
+      <select name="saveBook">
+          <% booksResponse.bookshelfArray.forEach(bookshelf  => { %>
+            <option><%= bookshelf %></option>    
             <%  });%>        
-          </select>
+        </select>
+        <button type="submit">Update in bookshelf</button>
     </form>
     <form action="/searches/delete" method="post" _method="delete"></form>
     <% }); %>

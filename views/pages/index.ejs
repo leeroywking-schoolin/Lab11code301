@@ -30,6 +30,9 @@
         <p class="isbn">
           <%= book.isbn %>
         </p>
+        <p class="bookshelf">
+            <%= book.bookshelf %>
+        </p>
         <input type="button" onclick="location.href='/details/<%=book.isbn%>'"" ; value="View book Details" />
       </div>
       <% }); %>
