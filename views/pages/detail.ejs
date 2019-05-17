@@ -9,7 +9,7 @@
   <nav>
     <%- include('../partials/navbar') %>
   </nav>
-  
+
   <% booksArray.forEach(book => { %>
     <div class="booksDiv">
       <p><img src="<%= book.image_url %>"></p>
@@ -38,6 +38,8 @@
       <button type="submit">Update in bookshelf</button>
     </form>
     <% }); %>
+    <%- include('../partials/footer') %>
 </body>
+
 
 </html>

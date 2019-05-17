@@ -14,7 +14,27 @@
     <div id="totalBooksInDB">
      <%= booksArray.length %> book(s) in your bookshelf.
      </div>
-     <%- include('../partials/results') %>
+
+     <% booksArray.forEach(book => { %>
+      <div class="booksDiv">
+        <p><img src="<%= book.image_url %>"></p>
+        <p>
+          <%= book.title %>
+        </p>
+        <p>
+          <%= book.author %>
+        </p>
+        <p class="description">
+          <%= book.description %>
+        </p>
+        <p class="isbn">
+          <%= book.isbn %>
+        </p>
+        <input type="button" onclick="location.href='/details/<%=book.isbn%>'"" ; value="View book Details" />
+      </div>
+      <% }); %>
+
+     
   </main>
 </body>
 
