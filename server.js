@@ -53,7 +53,7 @@ app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
 // note that .ejs file extension is not required
 function newSearch(request, response) {
-  response.render('pages/new');
+  response.render('pages/searches/new');
 }
 
 // No API key required
@@ -75,7 +75,7 @@ function createSearch(request, response) {
     .then(apiResponse =>
       apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(results =>
-      response.render('pages/searches/show', { booksArray: results }))
+      response.render('pages/books/show', { booksArray: results }))
     .catch(err => errorHandler(err, response))
 }
 
@@ -162,7 +162,7 @@ function viewDetails(request, response) {
       .then(results => {
         console.log('results.rows', results.rows);
         // this needs to make a JS object
-        response.render('pages/detail', { booksArray: results.rows });
+        response.render('pages/books/detail', { booksArray: results.rows });
       })
   .catch(err => errorHandler(err))
 }
