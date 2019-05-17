@@ -13,6 +13,18 @@ const PORT = process.env.PORT;
 // middle ware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+const methodOverride = require('method-override');
+
+
+
+app.use(methodOverride((request, response) => {
+  if (request.body && typeof request.body === 'object' && '_method' in request.body) {
+    // look in urlencoded POST bodies and delete it
+    let method = request.body._method;
+    delete request.body._method;
+    return method;
+  }
+}))
 
 const client = new pg.Client(process.env.DATABASE_URL);
 
@@ -130,8 +142,7 @@ function saveBook(request, response) {
 }
 
 function updateBook(request, response) {
-
-
+  console.log('UPDATING THE BOOK')
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
   let author = request.body.saveBook[1]
@@ -144,7 +155,7 @@ function updateBook(request, response) {
   let values = [title, author, description, isbn, bookshelf];
 
   return client.query(SQL, values)
-    .then(response.redirect('/'))
+    .then(response.redirect(`/details/${isbn}`))
     .then(err => errorHandler(err));
 }
 

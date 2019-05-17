@@ -9,7 +9,34 @@
   <nav>
     <%- include('../partials/navbar') %>
   </nav>
-  <%- include('../partials/results') %>
+  <% booksArray.forEach(book => { %>
+    <div class="booksDiv">
+      <p><img src="<%= book.image_url %>"></p>
+      <p>
+        <%= book.title %>
+      </p>
+      <p>
+        <%= book.author %>
+      </p>
+      <p class="description">
+        <%= book.description %>
+      </p>
+      <p class="isbn">
+        <%= book.isbn %>
+      </p>
+      <button class="detailButton" name="<%=book.isbn%>">View details</button>
+    </div>
+    <form action="/searches/save_id" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
+      <img src="<%= book.image_url %>">
+      <input type="text" name="saveBook" value="<%= book.title %>">
+      <input type="text" name="saveBook" value="<%= book.author %>">
+      <input type="text" name="saveBook" value="<%= book.description %>">
+      <input type="hidden" name="saveBook" value="<%= book.image_url %>">
+      <input type="text" name="saveBook" value="<%= book.isbn %>">
+      <input type="text" name="saveBook" value="" placeholder="bookshelf">
+      <button type="submit">Update in bookshelf</button>
+    </form>
+    <% }); %>
 </body>
 
 </html>
