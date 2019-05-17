@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-    <%- include('../../partials/head') %>
+    <%- include('../../layout/head') %>
 </head>
 
 <body>
   <nav>
-    <%- include('../../partials/navbar') %>
+    <%- include('../../layout/navbar') %>
   </nav>
 
   <% booksArray.forEach(book => { %>
@@ -27,18 +27,10 @@
       </p>
       <button class="detailButton" name="<%=book.isbn%>">View details</button>
     </div>
-    <form action="/searches/save_idput" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
-      <img src="<%= book.image_url %>">
-      <input type="text" name="saveBook" value="<%= book.title %>">
-      <input type="text" name="saveBook" value="<%= book.author %>">
-      <input type="text" name="saveBook" value="<%= book.description %>">
-      <input type="hidden" name="saveBook" value="<%= book.image_url %>">
-      <input type="text" name="saveBook" value="<%= book.isbn %>">
-      <input type="text" name="saveBook" value="" placeholder="bookshelf">
-      <button type="submit">Update in bookshelf</button>
-    </form>
     <% }); %>
-    <%- include('../../partials/footer') %>
+
+    <%- include('../../layout/edit') %>
+    <%- include('../../layout/footer') %>
 </body>
 
 

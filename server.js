@@ -38,7 +38,7 @@ app.get('/new', newSearch);
 app.post('/searches', createSearch);
 app.post('/searches/save_id', saveBook);
 app.post('/searches/save_idput', updateBook);
-
+app.post('/searches/delete', deletebook);
 
 app.get('/details/:detail_id', viewDetails);
 // catch-all
@@ -144,13 +144,22 @@ function updateBook(request, response) {
   let image_url = request.body.saveBook[3]
   let isbn = request.body.saveBook[4]
   let bookshelf = request.body.saveBook[5]
-
   let SQL = 'UPDATE books SET title=$1, author=$2 ,description=$3 , bookshelf=$5 WHERE isbn=$4';
   let values = [title, author, description, isbn, bookshelf];
-
   return client.query(SQL, values)
     .then(response.redirect('/'))
     .then(err => errorHandler(err));
+}
+
+function deletebook(request, response) {
+  console.log(request.body.deleteBook)
+  console.log('Deleting the book');
+  let isbn = request.body.deleteBook
+  let SQL = 'DELETE FROM books WHERE isbn=$1'
+  let values = [isbn];
+  return client.query(SQL, values)
+  .then(response.redirect('/'))
+  .then(err => errorHandler(err));
 }
 
 function viewDetails(request, response) {
