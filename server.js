@@ -12,10 +12,8 @@ const PORT = process.env.PORT;
 
 // middle ware
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static('public/'));
 const methodOverride = require('method-override');
-
-
 
 app.use(methodOverride((request, response) => {
   if (request.body && typeof request.body === 'object' && '_method' in request.body) {
@@ -35,15 +33,11 @@ client.on('error', err => console.log(err));
 app.set('view engine', 'ejs');
 
 app.get('/', getBooksFromDb);
-// api routes
-// renders the search form
+
 app.get('/new', newSearch);
-
-// creases a new search to the google books api
 app.post('/searches', createSearch);
-
 app.post('/searches/save_id', saveBook);
-app.put('/searches/save_id', updateBook);
+app.post('/searches/save_idput', updateBook);
 
 
 app.get('/details/:detail_id', viewDetails);
@@ -155,7 +149,7 @@ function updateBook(request, response) {
   let values = [title, author, description, isbn, bookshelf];
 
   return client.query(SQL, values)
-    .then(response.redirect(`/details/${isbn}`))
+    .then(response.redirect('/'))
     .then(err => errorHandler(err));
 }
 

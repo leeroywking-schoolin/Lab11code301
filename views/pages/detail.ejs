@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
-  <head> 
+<html lang="en">
+
+<head>
     <%- include('../partials/head') %>
-  </head>
- 
+</head>
 
 <body>
   <nav>
     <%- include('../partials/navbar') %>
   </nav>
+  
   <% booksArray.forEach(book => { %>
     <div class="booksDiv">
       <p><img src="<%= book.image_url %>"></p>
@@ -26,7 +27,7 @@
       </p>
       <button class="detailButton" name="<%=book.isbn%>">View details</button>
     </div>
-    <form action="/searches/save_id" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
+    <form action="/searches/save_idput" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
       <img src="<%= book.image_url %>">
       <input type="text" name="saveBook" value="<%= book.title %>">
       <input type="text" name="saveBook" value="<%= book.author %>">
