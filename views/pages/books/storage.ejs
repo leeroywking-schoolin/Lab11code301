@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../layout/head') %>
+</head>
+
+<body>
+  <nav>
+    <%- include('../../layout/navbar') %>
+  </nav>
+<%= booksResponse %>
+<% booksResponse.booksArray.forEach(book => { %>
+  <div class="booksDiv">
+    <p><img src="<%= book.image_url %>"></p>
+    <p>
+      <%= book.title %>
+    </p>
+    <p>
+      <%= book.author %>
+    </p>
+    <p class="description">
+      <%= book.description %>
+    </p>
+    <p class="isbn">
+      <%= book.isbn %>
+    </p>
+    <button class="detailButton" name="<%=book.isbn%>">View details</button>
+  </div>
+  <% }); %>
+
+  <%- include('../../layout/edit') %>
+  <%- include('../../layout/footer') %>
+</body>
+
+
+</html>

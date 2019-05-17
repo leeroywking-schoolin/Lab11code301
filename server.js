@@ -38,7 +38,7 @@ app.get('/new', newSearch);
 app.post('/searches', createSearch);
 app.post('/searches/save_id', saveBook);
 app.post('/searches/save_idput', updateBook);
-
+app.post('/searches/save_delete', deletebook);
 
 app.get('/details/:detail_id', viewDetails);
 // catch-all
@@ -53,7 +53,7 @@ app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
 // note that .ejs file extension is not required
 function newSearch(request, response) {
-  response.render('pages/new');
+  response.render('pages/searches/new');
 }
 
 // No API key required
@@ -75,7 +75,7 @@ function createSearch(request, response) {
     .then(apiResponse =>
       apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(results =>
-      response.render('pages/searches/show', { booksArray: results }))
+      response.render('pages/books/show', { booksArray: results }))
     .catch(err => errorHandler(err, response))
 }
 
@@ -122,7 +122,7 @@ function saveBook(request, response) {
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
   let author = request.body.saveBook[1]
-  let description =request.body.saveBook[2].slice(0,750)
+  let description = request.body.saveBook[2].slice(0, 750)
   let image_url = request.body.saveBook[3]
   let isbn = request.body.saveBook[4]
   let bookshelf = request.body.saveBook[5]
@@ -131,7 +131,7 @@ function saveBook(request, response) {
   let values = [title, author, description, image_url, isbn, bookshelf];
 
   return client.query(SQL, values)
-    .then(response.redirect(`/details/${isbn}`),)
+    .then(response.redirect(`/details/${isbn}`))
     .then(err => errorHandler(err));
 }
 
@@ -140,14 +140,23 @@ function updateBook(request, response) {
   // let {title, author, description, image_url, isbn, bookshelf} = request.body.saveBook;
   let title = request.body.saveBook[0]
   let author = request.body.saveBook[1]
-  let description =request.body.saveBook[2].slice(0,750)
+  let description = request.body.saveBook[2].slice(0, 750)
   let image_url = request.body.saveBook[3]
   let isbn = request.body.saveBook[4]
   let bookshelf = request.body.saveBook[5]
-
   let SQL = 'UPDATE books SET title=$1, author=$2 ,description=$3 , bookshelf=$5 WHERE isbn=$4';
   let values = [title, author, description, isbn, bookshelf];
+  return client.query(SQL, values)
+    .then(response.redirect('/'))
+    .then(err => errorHandler(err));
+}
 
+function deletebook(request, response) {
+  console.log(request.body.deleteBook)
+  console.log('Deleting the book');
+  let isbn = request.body.deleteBook
+  let SQL = 'DELETE FROM books WHERE isbn=$1'
+  let values = [isbn];
   return client.query(SQL, values)
     .then(response.redirect('/'))
     .then(err => errorHandler(err));
@@ -158,11 +167,17 @@ function viewDetails(request, response) {
   let isbn = request.params.detail_id;
   let VALUES = [isbn];
   let SQL = `SELECT * FROM BOOKS where isbn=$1`;
-  return client.query(SQL, VALUES)
-      .then(results => {
-        console.log('results.rows', results.rows);
-        // this needs to make a JS object
-        response.render('pages/detail', { booksArray: results.rows });
-      })
-  .catch(err => errorHandler(err))
+  let SQL2 = `SELECT DISTINCT bookshelf FROM books`;
+  let responseObject = {};
+  client.query(SQL, VALUES)
+    .then(results => {
+    responseObject.booksArray = results.rows
+    client.query(SQL2)
+    .then(result2 => {
+        responseObject.bookshelfArray = result2.rows
+        responseObject.bookshelfArray = responseObject.bookshelfArray.map(item => item.bookshelf).filter(item => item)
+        response.render('pages/books/detail', { booksResponse: responseObject })
+    })
+  })
+    .catch(err => errorHandler(err));
 }
