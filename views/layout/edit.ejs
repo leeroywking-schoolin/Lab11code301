@@ -15,6 +15,7 @@
         <button type="submit">Update in bookshelf</button>
     </form>
     <form action="/searches/save_delete" method="post" _method="delete">
+        <input type="hidden" name="deleteBook" value="<%= book.isbn %>">
         <button type="submit"> DELETE THIS BOOK</button>
     </form>
     <% }); %>
