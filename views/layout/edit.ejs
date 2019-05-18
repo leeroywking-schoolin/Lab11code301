@@ -1,6 +1,7 @@
 <% booksResponse.booksArray.forEach(book => { %>
-    <form action="/searches/save_idput" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
+    <form action="/searches/save_id" method="post" _method="put" id="<%=book.isbn%>" class="bookForm">
       <img src="<%= book.image_url %>">
+      <input type="hidden" name="_method" value="put">
       <input type="text" name="saveBook" value="<%= book.title %>" required>
       <input type="text" name="saveBook" value="<%= book.author %>" required>
       <input type="text" name="saveBook" value="<%= book.description %>" required >
@@ -14,7 +15,8 @@
         </select>
         <button type="submit">Update in bookshelf</button>
     </form>
-    <form action="/searches/save_delete" method="post" _method="delete">
+    <form action="/searches/save_id" method="post" _method="delete">
+        <input type="hidden" name="_method" value="delete">
         <input type="hidden" name="deleteBook" value="<%= book.isbn %>">
         <button type="submit"> DELETE THIS BOOK</button>
     </form>
