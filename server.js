@@ -37,8 +37,9 @@ app.get('/', getBooksFromDb);
 app.get('/new', newSearch);
 app.post('/searches', createSearch);
 app.post('/searches/save_id', saveBook);
-app.post('/searches/save_idput', updateBook);
-app.post('/searches/save_delete', deletebook);
+
+app.put('/searches/save_id', updateBook);
+app.delete('/searches/save_id', deletebook);
 
 app.get('/details/:detail_id', viewDetails);
 // catch-all
